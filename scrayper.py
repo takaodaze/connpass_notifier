@@ -2,29 +2,83 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 import time
+import psycopg2
+
+
+def connecter():
+    conn = psycopg2.connect('''
+    dbname=dopdifgtl4n9t
+    host=ec2-54-235-66-1.compute-1.amazonaws.com
+    user=yfneaarqpbzsuq
+    password=4580d3a0e77f82e7bb199f8698e407eec8409c9f183bf094eccc1c755cf974e4
+    ''')
+    conn.autocommit = True
+    return conn
+
+
+def query(connecter, sql):
+    with connecter.cursor() as cur:
+        for s in sql:
+            cur.execute(s)
+
+
+def insertEvent(event, prefectures):
+    conn = connecter()
+    sql = []
+    sql.append(f'''
+        INSERT INTO events VALUES
+        ('{event["name"]}','{event["date"]}','{event["img"]}','{prefectures}','{event["domain"]}')
+    ''')
+    query(conn, sql)
+
+
+def insertEvents(events, prefectures):
+    conn = connecter()
+    sql = []
+    for event in events:
+        sql.append(f'''
+            INSERT INTO events VALUES
+            ('{event["name"]}','{event["date"]}','{event["img"]}','{prefectures}','{event["domain"]}')
+        ''')
+    query(conn, sql)
+
 
 def get_connpass(prefectures, page, from_date, to_date):
-	result_texts=[]
-	page += 1
-	previours_results = False
-	for i in range(1,page):
-		url = f'https://connpass.com/search/?page={i}&q=&start_from={from_date.year}%2F{from_date.month}%2F{from_date.day}&start_to={to_date.year}%2F{to_date.month}%2F{to_date.day}&prefectures={prefectures}&selectItem={prefectures}'
-		r = requests.get(url)
-		soup = BeautifulSoup(r.content, "html.parser")
-		results = soup.select('a.url.summary')
-		if previours_results == results and i!=1:
-			return result_texts
-		for event in results:
-			result_texts.append(event.text)
-		time.sleep(0.8)
-		previours_results = results
-	return result_texts
-	
+    events = list()
+    page += 1
+    previours_results = False
+    for i in range(1, page):
+        url = f'https://connpass.com/search/?page={i}&q=&start_from={from_date.year}%2F{from_date.month}%2F{from_date.day}&start_to={to_date.year}%2F{to_date.month}%2F{to_date.day}&prefectures={prefectures}&selectItem={prefectures}'
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "html.parser")
+        events_name = soup.select('a.url.summary')
+        events_date = soup.select('p.date')
+        events_year = soup.select('p.year')
+        events_img = soup.select('p.event_thumbnail img')
+        if previours_results == events_name:
+            return events
+        # check to do rooping.
+        for i in range(len(events_name)):
+            event = {}
+            # replace ' to '' for postgresql.
+            event['name'] = events_name[i].text.replace("\'", "\'\'")
+            event['date'] = events_year[i].text  + '/' + events_date[i].text
+            event['img'] = events_img[i]['src']
+            event['domain'] = 'connpass'
+            events.append(event)
+        time.sleep(0.8)
+        previours_results = events_name
+    return events
 
+
+
+def download_connpass():
+    get_connpass = list()
+
+    
 if __name__ == "__main__":
-	f_date = datetime.date(2020,1,1)
-	t_date = datetime.date(2020, 1, 31)
-	result_texts = get_connpass('fukuoka', 40, f_date, t_date)
-	for event in result_texts:
-		print(event)
-
+    prefectures = 'fukuoka'
+    f_date = datetime.date(2020, 2, 1)
+    t_date = datetime.date(2020, 2, 29)
+    events = get_connpass(prefectures, 2, f_date, t_date)
+    insertEvents(events, prefectures)
