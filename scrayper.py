@@ -3,6 +3,7 @@ import requests
 import datetime
 import time
 import psycopg2
+from psycopg2.extras import DictCursor
 
 
 def connecter():
@@ -38,7 +39,7 @@ def insertEvents(events, prefectures):
     for event in events:
         sql.append(f'''
             INSERT INTO events VALUES
-            ('{event["name"]}','{event["date"]}','{event["img"]}','{prefectures}','{event["domain"]}')
+            ('{event["name"]}','{event["date"]}','{event["url"]}','{event["img"]}','{prefectures}','{event["domain"]}')
         ''')
     query(conn, sql)
 
@@ -62,6 +63,7 @@ def get_connpass(prefectures, page, from_date, to_date):
             event = {}
             # replace ' to '' for postgresql.
             event['name'] = events_name[i].text.replace("\'", "\'\'")
+            event['url'] = events_name[i]['href']
             event['date'] = events_year[i].text  + '/' + events_date[i].text
             event['img'] = events_img[i]['src']
             event['domain'] = 'connpass'
@@ -71,6 +73,20 @@ def get_connpass(prefectures, page, from_date, to_date):
     return events
 
 
+def fetch_events(from_date,to_date,prefectures):
+    f_date_str = from_date.strftime("%Y/%m/%d")
+    t_date_str = to_date.strftime("%Y/%m/%d")
+    sql = f'''
+        SELECT event_name,img_url,event_url,event_date
+        FROM events
+        WHERE event_date BETWEEN '{f_date_str}' AND '{t_date_str}'
+    '''
+    conn = connecter()
+    with conn.cursor(cursor_factory=DictCursor) as cur:
+        cur.execute(sql)
+        events_dict = cur.fetchall()
+    #events_dict is type:List
+    return events_dict
 
 def download_connpass():
     get_connpass = list()
@@ -80,5 +96,6 @@ if __name__ == "__main__":
     prefectures = 'fukuoka'
     f_date = datetime.date(2020, 2, 1)
     t_date = datetime.date(2020, 2, 29)
-    events = get_connpass(prefectures, 2, f_date, t_date)
-    insertEvents(events, prefectures)
+    # events = get_connpass(prefectures, 2, f_date, t_date)
+    # insertEvents(events, prefectures)
+    fetch_events(f_date,t_date,prefectures)
