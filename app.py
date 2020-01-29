@@ -4,6 +4,7 @@ import datetime
 import psycopg2
 from bs4 import BeautifulStoneSoup
 import scrayper
+import lineApiTools
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -48,18 +49,19 @@ def callback():
 def handle_message(event):
     # https://developers.line.biz/console/channel/1653365219/basic/
     # LINEコンソールのwebhook URL のエラー回避用.
+    user_id = event.source.user_id
     if event.reply_token == "00000000000000000000000000000000":
         return
     if event.message.text == "ふくおか":
-        f_date = datetime.date(2020,1,1)
-        t_date = datetime.date(2020, 1, 31)
-        text=""
-        results = scrayper.get_connpass('fukuoka', 1, f_date, t_date)
-        for event_name in results:
-            text+=event_name+'\n'
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text)
-        )
+        f_date = datetime.date(2020,2,1)
+        t_date = datetime.date(2020, 2, 29)
+        events = scrayper.fetch_events(f_date,t_date,'fukuoka')
+        carousel = lineApiTools.gen_events_carousel(events)
+
+        for message in carousel:
+            line_bot_api.push_message(
+                user_id,messages=message
+            )
         
 
         
