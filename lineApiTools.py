@@ -10,7 +10,7 @@ from psycopg2 import *
 def gen_events_carousel(events):
     # events : dict in list
     messages = []
-    for i in range(len(events)+9//10):
+    for i in range((len(events)+9)//10):
         carousel_template_message = TemplateSendMessage(
             alt_text='Events',
             template=CarouselTemplate(
