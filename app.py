@@ -98,9 +98,9 @@ def handle_follow(event):
 def handle_unfollow(event):
     scrayper.delete_user_profile(event.source.user_id)
 
-@handler.add("/cron/",methods=['POST'])
-def cron_handler():
-    pass
+# @handler.add("/cron/",methods=['POST'])
+# def cron_handler():
+#     pass
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=5000)
