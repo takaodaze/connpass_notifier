@@ -102,4 +102,5 @@ def handle_unfollow(event):
 def cron_handler():
     
 
-app.run()
+if __name__ == "__main__":
+    app.run()
