@@ -79,7 +79,7 @@ def handle_postback(event):
         
         carousel = lineApiTools.gen_events_carousel(events)
 
-        line_bot_api.push_message(to=user_id,TextMessage(text="検索中..."))
+        line_bot_api.push_message(to=user_id,TextSendMessage(text="検索中..."))
         for message in carousel:
             line_bot_api.push_message(
                 to=user_id,messages=message

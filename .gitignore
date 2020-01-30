@@ -2,3 +2,4 @@
 .Untitled.ipnb
 .python-version
 sqltools*
+*.DS_Store
