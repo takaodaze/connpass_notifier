@@ -71,7 +71,6 @@ def handle_postback(event):
         line_bot_api.reply_message(event.reply_token, message)
 
     elif cookie[0] == "to_date_message":
-        print(cookie[1])
         from_date = datetime.date.fromisoformat(cookie[1])
         to_date = datetime.date.fromisoformat(event.postback.params['date'])
         
