@@ -91,6 +91,20 @@ def fetch_events(from_date,to_date,prefectures):
 def download_connpass():
     get_connpass = list()
 
+def insert_user_profile(userid,display_name):
+    sql = f"INSERT INTO users VALUES('{userid}','{display_name}')"
+    conn = connecter()
+    with conn.cursor() as cur:
+        cur.execute(sql)
+
+def delete_user_profile(userid):
+    sql = f"DELETE FROM users WHERE user_id = '{userid}'"
+    conn = connecter()
+    with conn.cursor() as cur:
+        cur.execute(sql)
+
+
+
     
 if __name__ == "__main__":
     prefectures = 'fukuoka'
