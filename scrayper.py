@@ -145,7 +145,7 @@ if __name__ == "__main__":
     
     if len(new_events) > 0:
         # TODO
-        url = "http://f95f01a9.ngrok.io/cron"
+        url = "https://conpass-notifier.herokuapp.com/cron"
         method = "POST"
         headers = {"Content-Type": "application/json"}
         # PythonオブジェクトをJSONに変換する

@@ -17,10 +17,10 @@ from linebot.models import *
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
 # TODO
-CHANNEL_ACCESS_TOKEN = "oVq/m7kmR5jPAi0IrvqMIdoTI4282nIifYT1R9DHkONg63saC8mQwiOuevWsrW+jupLfHnT4mx3ex8OXNiwEH21VQnepvoll2KZqw7LovYsecpIeU5PtAiPqJCUnMFhJrAwey9HnRShgQNxGSMMjYgdB04t89/1O/w1cDnyilFU="
+CHANNEL_ACCESS_TOKEN = "aum5WMRALWyRx7EeFGQpqMIAKMRDxqtuyiQ6o5shAw1TsD6DDFElPxq4eJSoEAFvCWYLpZFljQNsojWI11hflZRGI1E54paRgrXp4om20XptO6151PKORWRjRWaAlurG/gQS6o6UA9mGRNqm3Pm9NwdB04t89/1O/w1cDnyilFU="
 # CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
 # TODO
-CHANNEL_SECRET = "007c8e55c5dd158c68d551b8a4174baa"
+CHANNEL_SECRET = "2b5ca5fb70f2a66347a0e059a7e05acf"
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 app = Flask(__name__)
@@ -114,7 +114,7 @@ def cron_handler():
     all_id = scrayper.select_all_id()
 
     carousel = lineApiTools.gen_events_carousel(request.json)
-    scrayper.insertEvents(request.json,'fukuoka')
+    scrayper.insertEvents(requesft.json,'fukuoka')
     for user_id in all_id:
         for message in carousel:
             print(user_id[0])
