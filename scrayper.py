@@ -82,7 +82,7 @@ def fetch_events(from_date,to_date,prefectures):
     sql = f'''
         SELECT event_name,img_url,event_url,event_date
         FROM events
-        WHERE event_date BETWEEN '{f_date_str}' AND '{t_date_str}
+        WHERE event_date BETWEEN '{f_date_str}' AND '{t_date_str}'
         ORDER BY event_date ASC'
     '''
     conn = connecter()
@@ -121,7 +121,7 @@ def delete_user_profile(userid):
 if __name__ == "__main__":
     prefectures = "fukuoka"
     from_date = dt.today()
-    to_date = dt.today() + relativedelta(months=1)
+    to_date = dt.today() + relativedelta(months=3)
     print(f"search from {from_date} to {to_date}")
 
     scrayped_events = get_connpass(prefectures, 1000, from_date, to_date)
