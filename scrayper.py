@@ -144,6 +144,7 @@ if __name__ == "__main__":
                 new_events.append(event)
     
     if len(new_events) > 0:
+        # TODO
         url = "http://f95f01a9.ngrok.io/cron"
         method = "POST"
         headers = {"Content-Type": "application/json"}
