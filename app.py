@@ -110,16 +110,18 @@ def cron_handler():
 
     # print(request.json, type(request.json))
     for event in request.json:
-        event['event_date'] =  datetime.date.fromisoformat(event['event_date'].replace('/', '-'))
+        event['event_date'] = datetime.date.fromisoformat(
+            event['event_date'].replace('/', '-'))
     all_id = scrayper.select_all_id()
 
     carousel = lineApiTools.gen_events_carousel(request.json)
-    scrayper.insertEvents(request.json,'fukuoka')
+    scrayper.insertEvents(request.json, 'fukuoka')
     for user_id in all_id:
-        line_bot_api.push_message(to=user_id[0],TextSendMessage(text="新着イベントをお届けします。(test)"))
+        line_bot_api.push_message(
+            to=user_id[0], messages=TextSendMessage(text="新着イベントをお届けします。(test)"))
         for message in carousel:
             print(user_id[0])
-            line_bot_api.push_message(to=user_id[0],messages=message)
+            line_bot_api.push_message(to=user_id[0], messages=message)
 
     return jsonify(res='ok')
 
