@@ -83,7 +83,7 @@ def fetch_events(from_date,to_date,prefectures):
         SELECT event_name,img_url,event_url,event_date
         FROM events
         WHERE event_date BETWEEN '{f_date_str}' AND '{t_date_str}'
-        ORDER BY event_date ASC'
+        ORDER BY event_date ASC
     '''
     conn = connecter()
     with conn.cursor(cursor_factory=DictCursor) as cur:
