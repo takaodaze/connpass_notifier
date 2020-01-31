@@ -66,7 +66,7 @@ def handle_message(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    user_id=event.source.user_id
+    user_id = event.source.user_id
     cookie = event.postback.data.split(':')
     if cookie[0] == "from_date_message":
         from_date = datetime.date.fromisoformat(event.postback.params['date'])
@@ -76,16 +76,16 @@ def handle_postback(event):
     elif cookie[0] == "to_date_message":
         from_date = datetime.date.fromisoformat(cookie[1])
         to_date = datetime.date.fromisoformat(event.postback.params['date'])
-        
-        events = scrayper.fetch_events(from_date,to_date,'fukuoka')
-        
+
+        events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
+
         carousel = lineApiTools.gen_events_carousel(events)
 
-        line_bot_api.push_message(user_id,TextSendMessage(text="検索中..."))
+        line_bot_api.push_message(user_id, TextSendMessage(text="検索中..."))
         for message in carousel:
             print(message)
             line_bot_api.push_message(
-                to=user_id,messages=message
+                to=user_id, messages=message
             )
 
 
@@ -101,9 +101,27 @@ def handle_follow(event):
 def handle_unfollow(event):
     scrayper.delete_user_profile(event.source.user_id)
 
-# @handler.add("/cron/",methods=['POST'])
-# def cron_handler():
-#     pass
+
+@app.route('/cron', methods=['POST'])
+def cron_handler():
+    if request.headers['Content-Type'] != 'application/json':
+        print(request.headers['Content-Type'])
+        return flask.jsonify(res='error'), 400
+
+    # print(request.json, type(request.json))
+    for event in request.json:
+        event['event_date'] =  datetime.date.fromisoformat(event['event_date'].replace('/', '-'))
+    all_id = scrayper.select_all_id()
+
+    carousel = lineApiTools.gen_events_carousel(request.json)
+    scrayper.insertEvents(request.json,'fukuoka')
+    for user_id in all_id:
+        for message in carousel:
+            print(user_id[0])
+            line_bot_api.push_message(to=user_id[0],messages=message)
+
+    return jsonify(res='ok')
+
 
 if __name__ == "__main__":
-    app.run(port=5000,debug=True)
+    app.run(port=5000, debug=True)
