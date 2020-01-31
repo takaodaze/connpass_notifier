@@ -3,3 +3,5 @@
 .python-version
 sqltools*
 *.DS_Store
+__pycache__
+work*
