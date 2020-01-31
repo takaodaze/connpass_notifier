@@ -116,7 +116,7 @@ def cron_handler():
     carousel = lineApiTools.gen_events_carousel(request.json)
     scrayper.insertEvents(request.json,'fukuoka')
     for user_id in all_id:
-        line_bot_api.push_message(to=user_id[0],messages="新しいイベントを通知します。")
+        line_bot_api.push_message(to=user_id[0],TextSendMessage(text="新着イベントをお届けします。(テスト)"))
         for message in carousel:
             print(user_id[0])
             line_bot_api.push_message(to=user_id[0],messages=message)
