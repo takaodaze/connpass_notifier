@@ -114,7 +114,7 @@ def cron_handler():
     all_id = scrayper.select_all_id()
 
     carousel = lineApiTools.gen_events_carousel(request.json)
-    scrayper.insertEvents(requesft.json,'fukuoka')
+    scrayper.insertEvents(request.json,'fukuoka')
     for user_id in all_id:
         for message in carousel:
             print(user_id[0])

@@ -128,7 +128,6 @@ if __name__ == "__main__":
     # print(scrayped_events)
     fetched_events = fetch_events(from_date,to_date,prefectures)
     # print(fetched_events)
-    print(fetched_events[0]['event_name'])
     previours_event = set()
     current_event = set()
     for event in scrayped_events:
