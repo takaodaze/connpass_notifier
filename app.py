@@ -118,7 +118,7 @@ def cron_handler():
     scrayper.insertEvents(request.json, 'fukuoka')
     for user_id in all_id:
         line_bot_api.push_message(
-            to=user_id[0], messages=TextSendMessage(text="新着イベントをお届けします。(test)"))
+            to=user_id[0], messages=TextSendMessage(text="新着イベントをお届けします。"))
         for message in carousel:
             print(user_id[0])
             line_bot_api.push_message(to=user_id[0], messages=message)
