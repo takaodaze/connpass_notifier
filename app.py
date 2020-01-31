@@ -1,6 +1,7 @@
 from flask import *
 import requests
 import datetime
+import pprint
 import psycopg2
 from bs4 import BeautifulStoneSoup
 import scrayper
@@ -15,9 +16,11 @@ from linebot.models import *
 
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
-CHANNEL_ACCESS_TOKEN = "aum5WMRALWyRx7EeFGQpqMIAKMRDxqtuyiQ6o5shAw1TsD6DDFElPxq4eJSoEAFvCWYLpZFljQNsojWI11hflZRGI1E54paRgrXp4om20XptO6151PKORWRjRWaAlurG/gQS6o6UA9mGRNqm3Pm9NwdB04t89/1O/w1cDnyilFU="
+# TODO
+CHANNEL_ACCESS_TOKEN = "oVq/m7kmR5jPAi0IrvqMIdoTI4282nIifYT1R9DHkONg63saC8mQwiOuevWsrW+jupLfHnT4mx3ex8OXNiwEH21VQnepvoll2KZqw7LovYsecpIeU5PtAiPqJCUnMFhJrAwey9HnRShgQNxGSMMjYgdB04t89/1O/w1cDnyilFU="
 # CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
-CHANNEL_SECRET = "2b5ca5fb70f2a66347a0e059a7e05acf"
+# TODO
+CHANNEL_SECRET = "007c8e55c5dd158c68d551b8a4174baa"
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 app = Flask(__name__)
@@ -63,7 +66,7 @@ def handle_message(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    user_id=event.source.user_id
+    user_id = event.source.user_id
     cookie = event.postback.data.split(':')
     if cookie[0] == "from_date_message":
         from_date = datetime.date.fromisoformat(event.postback.params['date'])
@@ -73,15 +76,16 @@ def handle_postback(event):
     elif cookie[0] == "to_date_message":
         from_date = datetime.date.fromisoformat(cookie[1])
         to_date = datetime.date.fromisoformat(event.postback.params['date'])
-        
-        events = scrayper.fetch_events(from_date,to_date,'fukuoka')
-        
+
+        events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
+
         carousel = lineApiTools.gen_events_carousel(events)
 
-        line_bot_api.push_message(user_id,TextSendMessage(text="検索中..."))
+        line_bot_api.push_message(user_id, TextSendMessage(text="検索中..."))
         for message in carousel:
+            print(message)
             line_bot_api.push_message(
-                to=user_id,messages=message
+                to=user_id, messages=message
             )
 
 
@@ -97,9 +101,27 @@ def handle_follow(event):
 def handle_unfollow(event):
     scrayper.delete_user_profile(event.source.user_id)
 
-# @handler.add("/cron/",methods=['POST'])
-# def cron_handler():
-#     pass
+
+@app.route('/cron', methods=['POST'])
+def cron_handler():
+    if request.headers['Content-Type'] != 'application/json':
+        print(request.headers['Content-Type'])
+        return flask.jsonify(res='error'), 400
+
+    # print(request.json, type(request.json))
+    for event in request.json:
+        event['event_date'] =  datetime.date.fromisoformat(event['event_date'].replace('/', '-'))
+    all_id = scrayper.select_all_id()
+
+    carousel = lineApiTools.gen_events_carousel(request.json)
+    scrayper.insertEvents(request.json,'fukuoka')
+    for user_id in all_id:
+        for message in carousel:
+            print(user_id[0])
+            line_bot_api.push_message(to=user_id[0],messages=message)
+
+    return jsonify(res='ok')
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=5000)
+    app.run(port=5000, debug=True)
