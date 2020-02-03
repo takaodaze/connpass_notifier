@@ -17,10 +17,19 @@ from linebot.models import *
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
 # TODO
+# real
+# CHANNEL_ACCESS_TOKEN = "oVq/m7kmR5jPAi0IrvqMIdoTI4282nIifYT1R9DHkONg63saC8mQwiOuevWsrW+jupLfHnT4mx3ex8OXNiwEH21VQnepvoll2KZqw7LovYsecpIeU5PtAiPqJCUnMFhJrAwey9HnRShgQNxGSMMjYgdB04t89/1O/w1cDnyilFU="
+# dev
 CHANNEL_ACCESS_TOKEN = "oVq/m7kmR5jPAi0IrvqMIdoTI4282nIifYT1R9DHkONg63saC8mQwiOuevWsrW+jupLfHnT4mx3ex8OXNiwEH21VQnepvoll2KZqw7LovYsecpIeU5PtAiPqJCUnMFhJrAwey9HnRShgQNxGSMMjYgdB04t89/1O/w1cDnyilFU="
-# CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
+
+
 # TODO
+# real
+# CHANNEL_SECRET = "007c8e55c5dd158c68d551b8a4174baa"
+# dev
 CHANNEL_SECRET = "007c8e55c5dd158c68d551b8a4174baa"
+
+
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 app = Flask(__name__)
@@ -62,6 +71,13 @@ def handle_message(event):
     if event.message.text == "日時から探したい":
         message = lineApiTools.ask_fromdate()
         line_bot_api.reply_message(event.reply_token, message)
+    if event.message.text == "テスト":
+        from_date = datetime.date.today()
+        events = scrayper.fetch_events(from_date,from_date,'fukuoka')
+        messages = lineApiTools.gen_events_flex_carousel_list(events)
+        for message in messages:
+
+            line_bot_api.reply_message(event.reply_token, message)
 
 
 @handler.add(PostbackEvent)
@@ -110,15 +126,16 @@ def cron_handler():
 
     # print(request.json, type(request.json))
     for event in request.json:
-        event['event_date'] =  datetime.date.fromisoformat(event['event_date'].replace('/', '-'))
+        event['event_date'] = datetime.date.fromisoformat(
+            event['event_date'].replace('/', '-'))
     all_id = scrayper.select_all_id()
 
     carousel = lineApiTools.gen_events_carousel(request.json)
-    scrayper.insertEvents(request.json,'fukuoka')
+    scrayper.insertEvents(request.json, 'fukuoka')
     for user_id in all_id:
         for message in carousel:
             print(user_id[0])
-            line_bot_api.push_message(to=user_id[0],messages=message)
+            line_bot_api.push_message(to=user_id[0], messages=message)
 
     return jsonify(res='ok')
 
