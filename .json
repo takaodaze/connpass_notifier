@@ -1,0 +1,167 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213",
+        "margin": "none",
+        "size": "full"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "mm/dd",
+                    "size": "md",
+                    "weight": "bold",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "separator",
+                "margin": "xs"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "event_tilte",
+                "size": "lg",
+                "align": "center"
+              }
+            ]
+          }
+        ],
+        "spacing": "md",
+        "paddingAll": "13px",
+        "borderColor": "#808080"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "detail",
+            "align": "center",
+            "weight": "bold",
+            "color": "#4169E1"
+          }
+        ],
+        "spacing": "none",
+        "margin": "none",
+        "action": {
+          "type": "uri",
+          "label": "action",
+          "uri": "http://linecorp.com/"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213",
+        "margin": "none",
+        "size": "full"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "mm/dd",
+                    "size": "md",
+                    "weight": "bold",
+                    "align": "center"
+                  }
+                ]
+              },
+              {
+                "type": "separator",
+                "margin": "xs"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "event_tilte",
+                "size": "lg",
+                "align": "center"
+              }
+            ]
+          }
+        ],
+        "spacing": "md",
+        "paddingAll": "13px",
+        "borderColor": "#808080"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "detail",
+            "align": "center",
+            "weight": "bold",
+            "color": "#4169E1"
+          }
+        ],
+        "spacing": "none",
+        "margin": "none",
+        "action": {
+          "type": "uri",
+          "label": "action",
+          "uri": "http://linecorp.com/"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    }
+  ]
+}
