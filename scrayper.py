@@ -121,21 +121,21 @@ def delete_user_profile(userid):
 if __name__ == "__main__":
     prefectures = "fukuoka"
     from_date = dt.today()
-    to_date = dt.today() + relativedelta(months=1)
+    to_date = dt.today() + relativedelta(months=3)
     print(f"search from {from_date} to {to_date}")
 
     scrayped_events = get_connpass(prefectures, 1000, from_date, to_date)
     # print(scrayped_events)
     fetched_events = fetch_events(from_date,to_date,prefectures)
     # print(fetched_events)
-    print(fetched_events[0]['event_name'])
     previours_event = set()
     current_event = set()
     for event in scrayped_events:
         current_event.add(event['event_name'])
     for event in fetched_events:
         previours_event.add(event[0])
-    new_event_names = current_event-previours_event
+    new_event_names = current_event - previours_event
+    print(new_event_names)
     new_events = []
 
     for new_event_name in new_event_names:
