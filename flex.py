@@ -5,6 +5,41 @@ from linebot.models import FlexSendMessage
 
 class Flex:
 
+    start_flex_temp='''
+{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "新着イベント",
+          "text": "新着のイベントを教えて"
+        },
+        "style": "primary",
+        "color": "#ff7f50"
+      },
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "日時から探したい\b",
+          "text": "日時から探したい\b"
+        },
+        "style": "primary"
+      }
+    ]
+  }
+}
+    '''
+
     from_datepicker_temp = '''
     {
   "type": "bubble",
@@ -168,3 +203,9 @@ class Flex:
         to_datepicker_json = json.loads(to_datepicker_text)
         to_datepicker_flex = FlexSendMessage(alt_text="to_datepicker",contents=to_datepicker_json)
         return to_datepicker_flex
+    
+    def gen_start_flex(self):
+        start_flex_json = json.loads(self.start_flex_temp)
+        start_flex = FlexSendMessage(
+            alt_text="to_datepicker", contents=start_flex_json)
+        return start_flex
