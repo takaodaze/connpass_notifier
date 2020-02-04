@@ -2,6 +2,7 @@ import json
 class Flex:
     bubble_json_temp = '''{
       "type": "bubble",
+      "size": "kilo",
       "header": {
         "type": "box",
         "layout": "baseline",
@@ -11,7 +12,9 @@ class Flex:
             "text": "*event_date",
             "margin": "none",
             "weight": "bold",
-            "color": "#FFFFFF"
+            "color": "#FFFFFF",
+            "offsetBottom": "15px",
+            "size": "xl"
           }
         ],
         "backgroundColor": "#ff7f50"
