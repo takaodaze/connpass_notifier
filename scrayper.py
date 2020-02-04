@@ -5,6 +5,7 @@ import time
 import urllib
 import json
 import psycopg2
+from datetime import timedelta
 from psycopg2.extras import DictCursor
 from dateutil.relativedelta import relativedelta
 
@@ -103,14 +104,14 @@ def fetch_events(from_date, to_date, prefectures):
 
 def fetch_recentlly_events(prefectures):
     conn = connecter()
-    to_date = dt.today()
-    from_date_str = dt(to_date.year,to_date.month,to_date.day-4).isoformat()
-    to_date_str = to_date.isoformat()
+    delta = timedelta(days=4)
+    to_date_str = dt.today().isoformat()
+    from_date_str = (dt.today()-delta).isoformat()
     sql = f"""
         SELECT event_name,img_url,event_url,event_date
         FROM events
         WHERE insert_date BETWEEN '{from_date_str}' AND '{to_date_str}'
-        AND event_date >= '{from_date_str}'
+        AND event_date >= '{to_date_str}'
         ORDER BY event_date ASC
         LIMIT 50
     """
