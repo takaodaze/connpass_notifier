@@ -105,7 +105,7 @@ def fetch_recentlly_events(prefectures):
     conn = connecter()
     to_date = dt.today()
     from_date_str = dt(to_date.year,to_date.month,to_date.day-4).isoformat()
-    from_date_str = from_date.isoformat()
+    to_date_str = to_date.isoformat()
     sql = f"""
         SELECT event_name,img_url,event_url,event_date
         FROM events
