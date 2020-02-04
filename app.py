@@ -63,8 +63,6 @@ def handle_message(event):
     if event.message.text == "日時から探したい":
         message = lineApiTools.ask_fromdate()
         line_bot_api.reply_message(event.reply_token, message)
-    if event.message.text == "わお":
-        line_bot_api.broadcast(TextSendMessage("test message"))
     # if event.message.text == "テスト":
     #     from_date = datetime.date.today()
     #     events = scrayper.fetch_events(from_date,from_date,'fukuoka')
