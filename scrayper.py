@@ -116,9 +116,14 @@ def delete_user_profile(userid):
     with conn.cursor() as cur:
         cur.execute(sql)
 
-
+def delete_event(event_name):
+    sql = f"DELETE FROM events WHERE event_name = '{event_name}'"
+    conn = connecter()
+    with conn.cursor() as cur:
+        cur.execute(sql)
 
 if __name__ == "__main__":
+
     prefectures = "fukuoka"
     from_date = dt.today()
     to_date = dt.today() + relativedelta(months=3)
@@ -145,7 +150,7 @@ if __name__ == "__main__":
     
     if len(new_events) > 0:
         # TODO
-        url = "http://f95f01a9.ngrok.io/cron"
+        url = "https://32f0e13f.ngrok.io/cron"
         method = "POST"
         headers = {"Content-Type": "application/json"}
         # PythonオブジェクトをJSONに変換する

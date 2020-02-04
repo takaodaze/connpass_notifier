@@ -71,12 +71,12 @@ def handle_message(event):
     if event.message.text == "日時から探したい":
         message = lineApiTools.ask_fromdate()
         line_bot_api.reply_message(event.reply_token, message)
-    if event.message.text == "テスト":
-        from_date = datetime.date.today()
-        events = scrayper.fetch_events(from_date,from_date,'fukuoka')
-        messages = lineApiTools.gen_events_flex_carousel_list(events)
-        for message in messages:
-            line_bot_api.reply_message(event.reply_token, message)
+    # if event.message.text == "テスト":
+    #     from_date = datetime.date.today()
+    #     events = scrayper.fetch_events(from_date,from_date,'fukuoka')
+    #     messages = lineApiTools.gen_events_flex_carousel_list(events)
+    #     for message in messages:
+    #         line_bot_api.broadcast(message)
 
 
 @handler.add(PostbackEvent)
@@ -94,7 +94,7 @@ def handle_postback(event):
 
         events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
 
-        carousel = lineApiTools.gen_events_carousel(events)
+        carousel = lineApiTools.gen_events_flex_carousel_list(events)
 
         line_bot_api.push_message(user_id, TextSendMessage(text="検索中..."))
         for message in carousel:
@@ -127,14 +127,12 @@ def cron_handler():
     for event in request.json:
         event['event_date'] = datetime.date.fromisoformat(
             event['event_date'].replace('/', '-'))
-    all_id = scrayper.select_all_id()
 
-    carousel = lineApiTools.gen_events_carousel(request.json)
+
+    message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     scrayper.insertEvents(request.json, 'fukuoka')
-    for user_id in all_id:
-        for message in carousel:
-            print(user_id[0])
-            line_bot_api.push_message(to=user_id[0], messages=message)
+    for message in message_list:
+        line_bot_api.broadcast(message)
 
     return jsonify(res='ok')
 

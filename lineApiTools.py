@@ -102,7 +102,6 @@ def gen_events_flex_carousel(part_of_events):
 
     contents_data = json.loads(carousel_temp)
 
-    
     carousel = FlexSendMessage(
         alt_text="flex",
         contents=contents_data
