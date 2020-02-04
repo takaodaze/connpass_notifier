@@ -35,17 +35,26 @@ def insertEvent(event, prefectures):
     ''')
     query(conn, sql)
 
-
 def insertEvents(events, prefectures):
     conn = connecter()
     sql = []
+    now_date_str = dt.today().isoformat()
     for event in events:
         sql.append(f'''
-            INSERT INTO events VALUES
-            ('{event["event_name"]}','{event["event_date"]}','{event["event_url"]}','{event["img_url"]}','{prefectures}','{event["domain"]}')
-        ''')
+            INSERT INTO events(
+                event_name,event_date,event_url,
+                img_url,prefectures,insert_date
+            )
+            VALUES
+            ('{event["event_name"]}',
+            '{event["event_date"]}',
+            '{event["event_url"]}',
+            '{event["img_url"]}',
+            '{prefectures}',
+            '{now_date_str}')
+        '''
+        )
     query(conn, sql)
-
 
 def get_connpass(prefectures, page, from_date, to_date):
     events = list()
@@ -76,9 +85,6 @@ def get_connpass(prefectures, page, from_date, to_date):
         previours_results = events_name
     return events
 
-# Dict
-
-
 def fetch_events(from_date, to_date, prefectures):
     f_date_str = from_date.strftime("%Y/%m/%d")
     t_date_str = to_date.strftime("%Y/%m/%d")
@@ -89,6 +95,25 @@ def fetch_events(from_date, to_date, prefectures):
         ORDER BY event_date ASC
     '''
     conn = connecter()
+    with conn.cursor(cursor_factory=DictCursor) as cur:
+        cur.execute(sql)
+        events_dict = cur.fetchall()
+    # events_dict is type:List
+    return events_dict
+
+def fetch_recentlly_events(prefectures):
+    conn = connecter()
+    to_date = dt.today()
+    from_date_str = dt(from_date.year,from_date.month,from_date.day-7).isoformat()
+    from_date_str = from_date.isoformat()
+    sql = f"""
+        SELECT event_name,img_url,event_url,event_date
+        FROM events
+        WHERE insert_date BETWEEN '{from_date_str}' AND '{to_date_str}'
+        AND event_date >= '{from_date_str}'
+        ORDER BY event_date ASC
+        LIMIT 50
+    """
     with conn.cursor(cursor_factory=DictCursor) as cur:
         cur.execute(sql)
         events_dict = cur.fetchall()
@@ -129,10 +154,9 @@ def delete_event(event_name):
         cur.execute(sql)
 
 if __name__ == "__main__":
-
     prefectures = "fukuoka"
     from_date = dt.today()
-    to_date = dt.today() + relativedelta(months=3)
+    to_date = dt.today() + relativedelta(months=2)
     print(f"search from {from_date} to {to_date}")
 
     scrayped_events = get_connpass(prefectures, 1000, from_date, to_date)
@@ -157,7 +181,7 @@ if __name__ == "__main__":
 
     if len(new_events) > 0:
         # TODO
-        url = "https://conpass-notifier.herokuapp.com/cron"
+        url = "https://2b742062.ngrok.io/cron"
         method = "POST"
         headers = {"Content-Type": "application/json"}
         # PythonオブジェクトをJSONに変換する

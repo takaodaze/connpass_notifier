@@ -14,18 +14,20 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 import time
+from flex import Flex
 
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
 # TODO
-CHANNEL_ACCESS_TOKEN = "aum5WMRALWyRx7EeFGQpqMIAKMRDxqtuyiQ6o5shAw1TsD6DDFElPxq4eJSoEAFvCWYLpZFljQNsojWI11hflZRGI1E54paRgrXp4om20XptO6151PKORWRjRWaAlurG/gQS6o6UA9mGRNqm3Pm9NwdB04t89/1O/w1cDnyilFU="
+CHANNEL_ACCESS_TOKEN = "oVq/m7kmR5jPAi0IrvqMIdoTI4282nIifYT1R9DHkONg63saC8mQwiOuevWsrW+jupLfHnT4mx3ex8OXNiwEH21VQnepvoll2KZqw7LovYsecpIeU5PtAiPqJCUnMFhJrAwey9HnRShgQNxGSMMjYgdB04t89/1O/w1cDnyilFU="
 # CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
 # TODO
-CHANNEL_SECRET = "2b5ca5fb70f2a66347a0e059a7e05acf"
+CHANNEL_SECRET = "007c8e55c5dd158c68d551b8a4174baa"
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 app = Flask(__name__)
 
+flex = Flex()
 
 @app.route('/favicon.ico')
 def favicon():
@@ -61,8 +63,13 @@ def handle_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
     if event.message.text == "日時から探したい":
-        message = lineApiTools.ask_fromdate()
+        message = flex.gen_from_datepicker()
         line_bot_api.reply_message(event.reply_token, message)
+    if event.message.text == "新着のイベントを教えて":
+        flex_message = lineApiTools.gen_recentlly_event_flex_list('fukuoka')
+        line_bot_api.reply_message(event.reply_token, flex_message)
+        
+        
     # if event.message.text == "テスト":
     #     from_date = datetime.date.today()
     #     events = scrayper.fetch_events(from_date,from_date,'fukuoka')
@@ -77,7 +84,7 @@ def handle_postback(event):
     cookie = event.postback.data.split(':')
     if cookie[0] == "from_date_message":
         from_date = datetime.date.fromisoformat(event.postback.params['date'])
-        message = lineApiTools.ask_todate(from_date)
+        message = flex.gen_to_datepicker(from_date)
         line_bot_api.reply_message(event.reply_token, message)
 
     elif cookie[0] == "to_date_message":
@@ -117,7 +124,6 @@ def cron_handler():
     for event in request.json:
         event['event_date'] = datetime.date.fromisoformat(
             event['event_date'].replace('/', '-'))
-
 
     message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     scrayper.insertEvents(request.json, 'fukuoka')
