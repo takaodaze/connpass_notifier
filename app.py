@@ -110,7 +110,10 @@ def handle_follow(event):
     userID = event.source.user_id
 
     display_name = line_bot_api.get_profile(userID).display_name
+    
     scrayper.insert_user_profile(userID, display_name)
+    flex_message = flex.gen_start_flex()
+    line_bot_api.reply_message(event.reply_token, flex_message)
 
 
 @handler.add(UnfollowEvent)
