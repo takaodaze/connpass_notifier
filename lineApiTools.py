@@ -8,6 +8,7 @@ from linebot.models import FlexSendMessage
 from psycopg2 import *
 import json
 import pprint
+from flex import Flex
 
 
 def gen_events_carousel(events):
@@ -89,108 +90,24 @@ def gen_events_flex_carousel_list(events):
 
 def gen_events_flex_carousel(part_of_events):
     bubbles = str()
-    carousel = '''{
+    carousel_temp = '''{
         "type":"carousel",
         "contents":[
     '''
+    flex = Flex()
     for event in part_of_events:
-        bubbles += gen_flex_bubble(event)
-    print(bubbles)
+        bubbles += flex.set_event_data(event)
 
-    bubbles = bubbles[:-1]
-    carousel += (bubbles + "]}")
-    contents = json.loads(carousel)
+    carousel_temp += (bubbles[:-1] + "]}")
 
+    contents_data = json.loads(carousel_temp)
+
+    
     carousel = FlexSendMessage(
         alt_text="flex",
-        contents=contents
+        contents=contents_data
     )
+    print(contents_data)
     return carousel
 
 
-# json convert to python dict
-# return that python dict
-def gen_flex_bubble(event):
-    json_data = """
-    {"type": "bubble",
-      "size": "mega",
-      "hero": {
-        "type": "image",
-        "url": "*img_url",
-        "aspectMode": "cover",
-        "aspectRatio": "320:213",
-        "margin": "none",
-        "size": "full"
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "box",
-                "layout": "baseline",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "*event_date",
-                    "size": "md",
-                    "weight": "bold",
-                    "align": "center"
-                  }
-                ]
-              },
-              {
-                "type": "separator",
-                "margin": "xs"
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "text",
-                "text": "*event_name",
-                "size": "lg",
-                "align": "center"
-              }
-            ]
-          }
-        ],
-        "spacing": "md",
-        "paddingAll": "13px",
-        "borderColor": "#808080"
-      },
-      "footer": {
-        "type": "box",
-        "layout": "baseline",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Detail",
-            "align": "center",
-            "weight": "bold",
-            "color": "#4169E1"
-          }
-        ],
-        "action": {
-          "type": "uri",
-          "label": "action",
-          "uri": "*event_url"
-        }
-      },
-      "styles": {
-        "footer": {
-          "separator": true
-        }
-      }
-    },"""
-    str_date = event['event_date'].strftime('%m/%d')
-    print(f"img_url:{event['img_url']}")
-    data = json_data.replace("*img_url", event['img_url']).replace('*event_date', str_date).replace('*event_name', event['event_name']).replace('*event_url', event['event_url'])
-    return data

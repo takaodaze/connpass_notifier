@@ -76,7 +76,6 @@ def handle_message(event):
         events = scrayper.fetch_events(from_date,from_date,'fukuoka')
         messages = lineApiTools.gen_events_flex_carousel_list(events)
         for message in messages:
-
             line_bot_api.reply_message(event.reply_token, message)
 
 

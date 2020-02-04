@@ -5,3 +5,4 @@ sqltools*
 *.DS_Store
 __pycache__
 work*
+*.json
