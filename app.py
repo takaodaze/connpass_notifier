@@ -13,6 +13,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import *
+import time
 
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
@@ -107,7 +108,6 @@ def cron_handler():
         print(request.headers['Content-Type'])
         return flask.jsonify(res='error'), 400
 
-    # print(request.json, type(request.json))
     for event in request.json:
         event['event_date'] = datetime.date.fromisoformat(
             event['event_date'].replace('/', '-'))
@@ -115,12 +115,17 @@ def cron_handler():
 
     carousel = lineApiTools.gen_events_carousel(request.json)
     scrayper.insertEvents(request.json, 'fukuoka')
+
+    # send to users
     for user_id in all_id:
         line_bot_api.push_message(
             to=user_id[0], messages=TextSendMessage(text="新着イベントをお届けします。"))
         for message in carousel:
-            print(user_id[0])
             line_bot_api.push_message(to=user_id[0], messages=message)
+        #Log
+        print(f"sent to {user_id[0]}")
+        time.sleep(0.8)
+
 
     return jsonify(res='ok')
 

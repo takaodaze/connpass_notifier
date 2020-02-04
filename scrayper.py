@@ -135,13 +135,14 @@ if __name__ == "__main__":
     for event in fetched_events:
         previours_event.add(event[0])
     new_event_names = current_event-previours_event
-    new_events = []
+    #Log
+    print(f"Fould new events:{new_event_names}")
 
     for new_event_name in new_event_names:
         for event in scrayped_events:
             if event['event_name']==new_event_name:
                 new_events.append(event)
-    
+
     if len(new_events) > 0:
         # TODO
         url = "https://conpass-notifier.herokuapp.com/cron"
