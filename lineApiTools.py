@@ -4,7 +4,11 @@ from linebot.models import(
     SeparatorComponent
 )
 from linebot.models import *
+from linebot.models import FlexSendMessage
 from psycopg2 import *
+import json
+import pprint
+from flex import Flex
 
 
 def gen_events_carousel(events):
@@ -20,7 +24,10 @@ def gen_events_carousel(events):
         messages.append(carousel_template_message)
     return messages
 
+
 # 10　ずつ生成する。
+
+
 def gen_events_columns(part_of_events):
     columns = []
     for event in part_of_events:
@@ -39,6 +46,7 @@ def gen_events_columns(part_of_events):
         columns.append(column)
     return columns
 
+
 def ask_fromdate():
     message = TemplateSendMessage(
         alt_text='Buttons template',
@@ -54,6 +62,8 @@ def ask_fromdate():
             ])
     )
     return message
+
+
 def ask_todate(from_date):
     message = TemplateSendMessage(
         alt_text='Buttons template',
@@ -69,3 +79,34 @@ def ask_todate(from_date):
             ])
     )
     return message
+
+
+def gen_events_flex_carousel_list(events):
+    carousels = []
+    for i in range((len(events)+9)//10):
+        carousels.append(gen_events_flex_carousel(events[i*10:(i+1)*10]))
+    return carousels
+
+
+def gen_events_flex_carousel(part_of_events):
+    bubbles = str()
+    carousel_temp = '''{
+        "type":"carousel",
+        "contents":[
+    '''
+    flex = Flex()
+    for event in part_of_events:
+        bubbles += flex.set_event_data(event)
+
+    carousel_temp += (bubbles[:-1] + "]}")
+
+    contents_data = json.loads(carousel_temp)
+
+    carousel = FlexSendMessage(
+        alt_text="flex",
+        contents=contents_data
+    )
+    print(contents_data)
+    return carousel
+
+
