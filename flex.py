@@ -30,8 +30,8 @@ class Flex:
         "type": "button",
         "action": {
           "type": "message",
-          "label": "日時から探したい\b",
-          "text": "日時から探したい\b"
+          "label": "日時から検索",
+          "text": "日時から探したい"
         },
         "style": "primary"
       }
@@ -75,8 +75,7 @@ class Flex:
     ],
     "flex": 0
   }
-}
-    '''
+}'''
 
     to_datepicker_temp = '''
     {
@@ -207,5 +206,5 @@ class Flex:
     def gen_start_flex(self):
         start_flex_json = json.loads(self.start_flex_temp)
         start_flex = FlexSendMessage(
-            alt_text="to_datepicker", contents=start_flex_json)
+            alt_text="start_flexmenu", contents=start_flex_json)
         return start_flex
