@@ -13,7 +13,6 @@ class Flex:
             "margin": "none",
             "weight": "bold",
             "color": "#FFFFFF",
-            "offsetBottom": "15px",
             "size": "xl"
           }
         ],
