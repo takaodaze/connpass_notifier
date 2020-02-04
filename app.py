@@ -68,6 +68,9 @@ def handle_message(event):
     if event.message.text == "新着のイベントを教えて":
         flex_message = lineApiTools.gen_recentlly_event_flex_list('fukuoka')
         line_bot_api.reply_message(event.reply_token, flex_message)
+    else:
+        flex_message = flex.gen_start_flex()
+        line_bot_api.reply_message(event.reply_token, flex_message)
         
         
     # if event.message.text == "テスト":
