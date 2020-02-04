@@ -85,14 +85,14 @@ def handle_postback(event):
         to_date = datetime.date.fromisoformat(event.postback.params['date'])
 
         events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
-
         carousel = lineApiTools.gen_events_flex_carousel_list(events)
-
-        line_bot_api.push_message(user_id, TextSendMessage(text="検索中..."))
-        for message in carousel:
-            line_bot_api.push_message(
-                to=user_id, messages=message
-            )
+        
+        if 0 < len(carousel) <= 5:  
+            line_bot_api.reply_message(event.reply_token, carousel)
+        elif len(carousel)>5:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage("検索結果が多すぎたよ...\nもう少し期間を狭めてほしいな..."))
+        else:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage("1件も見つからなかった...\nごめんね..."))
 
 
 @handler.add(FollowEvent)
