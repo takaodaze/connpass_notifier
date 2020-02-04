@@ -140,7 +140,7 @@ if __name__ == "__main__":
     for event in fetched_events:
         previours_event.add(event[0])
     new_event_names = current_event - previours_event
-    new_event = []
+    new_events = []
     # Log
     print(f"Fould new events:{new_event_names}")
 
