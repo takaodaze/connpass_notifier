@@ -4,6 +4,7 @@ from linebot.models import(
     SeparatorComponent
 )
 from linebot.models import *
+from linebot.models import FlexSendMessage
 from psycopg2 import *
 import json
 import pprint
@@ -94,12 +95,16 @@ def gen_events_flex_carousel(part_of_events):
     '''
     for event in part_of_events:
         bubbles += gen_flex_bubble(event)
+    print(bubbles)
 
     bubbles = bubbles[:-1]
     carousel += (bubbles + "]}")
-    print(carousel)
+    contents = json.loads(carousel)
 
-    carousel = FlexSendMessage.new_from_json_dict(json.loads(carousel))
+    carousel = FlexSendMessage(
+        alt_text="flex",
+        contents=contents
+    )
     return carousel
 
 
@@ -111,7 +116,7 @@ def gen_flex_bubble(event):
       "size": "mega",
       "hero": {
         "type": "image",
-        "url": \"*img_url\",
+        "url": "*img_url",
         "aspectMode": "cover",
         "aspectRatio": "320:213",
         "margin": "none",
@@ -167,7 +172,7 @@ def gen_flex_bubble(event):
         "contents": [
           {
             "type": "text",
-            "text": "de",
+            "text": "Detail",
             "align": "center",
             "weight": "bold",
             "color": "#4169E1"
@@ -186,5 +191,6 @@ def gen_flex_bubble(event):
       }
     },"""
     str_date = event['event_date'].strftime('%m/%d')
-    json_date = json_data.replace("*img_url", event['imgぎ_url'])#.replace('*event_date', str_date).replace('*event_name', event['event_name']).replace('*event_url', event['event_url'])
-    return json_data
+    print(f"img_url:{event['img_url']}")
+    data = json_data.replace("*img_url", event['img_url']).replace('*event_date', str_date).replace('*event_name', event['event_name']).replace('*event_url', event['event_url'])
+    return data
