@@ -1,5 +1,84 @@
 import json
+from linebot.models import FlexSendMessage
+
+
+
 class Flex:
+
+    from_datepicker_temp = '''
+    {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "何日から探す？",
+        "weight": "bold",
+        "size": "xl"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "md",
+        "action": {
+          "type": "datetimepicker",
+          "mode": "date",
+          "label": "日付を選択",
+          "data": "from_date_message"
+        },
+        "color": "#ff7f50"
+      }
+    ],
+    "flex": 0
+  }
+}
+    '''
+
+    to_datepicker_temp = '''
+    {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "何日まで探す？",
+        "weight": "bold",
+        "size": "xl"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "md",
+        "action": {
+          "type": "datetimepicker",
+          "mode": "date",
+          "label": "日付を選択",
+          "data": "to_date_message:*fromdate"
+        }
+      }
+    ],
+    "flex": 0
+  }
+}
+    '''
     bubble_json_temp = '''{
       "type": "bubble",
       "size": "kilo",
@@ -68,10 +147,24 @@ class Flex:
       }
     },'''
     # Atention! , follows from backside
+
     def __init__(self):
         pass
-    
+
     def set_event_data(self, event):
         str_date = event['event_date'].strftime('%m/%d')
-        bubble_json = self.bubble_json_temp.replace("*img_url", event['img_url']).replace('*event_date', str_date).replace('*event_name', event['event_name']).replace('*event_url', event['event_url'])
+        bubble_json = self.bubble_json_temp.replace("*img_url", event['img_url']).replace(
+            '*event_date', str_date).replace('*event_name', event['event_name']).replace('*event_url', event['event_url'])
         return bubble_json
+
+    def gen_from_datepicker(self):
+        from_datepicker_json = json.loads(self.from_datepicker_temp)
+        from_datepicker_flex = FlexSendMessage(alt_text="from_datepicker",contents=from_datepicker_json)
+        print(from_datepicker_flex)
+        return from_datepicker_flex
+        
+    def gen_to_datepicker(self,from_date):
+        to_datepicker_text = self.to_datepicker_temp.replace("*fromdate",from_date.isoformat())
+        to_datepicker_json = json.loads(to_datepicker_text)
+        to_datepicker_flex = FlexSendMessage(alt_text="to_datepicker",contents=to_datepicker_json)
+        return to_datepicker_flex

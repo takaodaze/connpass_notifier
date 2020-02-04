@@ -9,6 +9,7 @@ from psycopg2 import *
 import json
 import pprint
 from flex import Flex
+import scrayper
 
 
 def gen_events_carousel(events):
@@ -110,3 +111,7 @@ def gen_events_flex_carousel(part_of_events):
     return carousel
 
 
+def gen_recentlly_event_flex_list(prefectures):
+    events = scrayper.fetch_recentlly_events(prefectures)
+    flex_message_list = gen_events_flex_carousel_list(events)
+    return flex_message_list
