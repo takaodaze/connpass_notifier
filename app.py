@@ -62,7 +62,7 @@ def handle_message(event):
     user_id = event.source.user_id
     if event.reply_token == "00000000000000000000000000000000":
         return
-    if event.message.text == "日時から探したい":
+    if event.message.text == "日時から探したい":
         message = flex.gen_from_datepicker()
         line_bot_api.reply_message(event.reply_token, message)
     if event.message.text == "新着のイベントを教えて":
