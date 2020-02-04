@@ -65,7 +65,7 @@ def handle_message(event):
     if event.message.text == "日時から探したい":
         message = flex.gen_from_datepicker()
         line_bot_api.reply_message(event.reply_token, message)
-    if event.message.text == "新着のイベントを教えて":
+    elif event.message.text == "新着のイベントを教えて":
         flex_message = lineApiTools.gen_recentlly_event_flex_list('fukuoka')
         line_bot_api.reply_message(event.reply_token, flex_message)
     else:
@@ -110,7 +110,7 @@ def handle_follow(event):
     userID = event.source.user_id
 
     display_name = line_bot_api.get_profile(userID).display_name
-    
+
     scrayper.insert_user_profile(userID, display_name)
     flex_message = flex.gen_start_flex()
     line_bot_api.reply_message(event.reply_token, flex_message)
