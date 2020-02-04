@@ -63,6 +63,12 @@ def handle_message(event):
     if event.message.text == "日時から探したい":
         message = lineApiTools.ask_fromdate()
         line_bot_api.reply_message(event.reply_token, message)
+    # if event.message.text == "テスト":
+    #     from_date = datetime.date.today()
+    #     events = scrayper.fetch_events(from_date,from_date,'fukuoka')
+    #     messages = lineApiTools.gen_events_flex_carousel_list(events)
+    #     for message in messages:
+    #         line_bot_api.broadcast(message)
 
 
 @handler.add(PostbackEvent)
@@ -80,7 +86,7 @@ def handle_postback(event):
 
         events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
 
-        carousel = lineApiTools.gen_events_carousel(events)
+        carousel = lineApiTools.gen_events_flex_carousel_list(events)
 
         line_bot_api.push_message(user_id, TextSendMessage(text="検索中..."))
         for message in carousel:
@@ -101,7 +107,7 @@ def handle_follow(event):
 def handle_unfollow(event):
     scrayper.delete_user_profile(event.source.user_id)
 
-
+# TODO shold be logging!!!!
 @app.route('/cron', methods=['POST'])
 def cron_handler():
     if request.headers['Content-Type'] != 'application/json':
@@ -111,21 +117,13 @@ def cron_handler():
     for event in request.json:
         event['event_date'] = datetime.date.fromisoformat(
             event['event_date'].replace('/', '-'))
-    all_id = scrayper.select_all_id()
 
-    carousel = lineApiTools.gen_events_carousel(request.json)
+
+    message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     scrayper.insertEvents(request.json, 'fukuoka')
-
-    # send to users
-    for user_id in all_id:
-        line_bot_api.push_message(
-            to=user_id[0], messages=TextSendMessage(text="新着イベントをお届けします。"))
-        for message in carousel:
-            line_bot_api.push_message(to=user_id[0], messages=message)
-        #Log
-        print(f"sent to {user_id[0]}")
-        time.sleep(0.8)
-
+    for message in message_list:
+        line_bot_api.broadcast(message)
+        print("did broadcast")
 
     return jsonify(res='ok')
 

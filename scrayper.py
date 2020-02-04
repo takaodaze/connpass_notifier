@@ -122,8 +122,14 @@ def delete_user_profile(userid):
     with conn.cursor() as cur:
         cur.execute(sql)
 
+def delete_event(event_name):
+    sql = f"DELETE FROM events WHERE event_name = '{event_name}'"
+    conn = connecter()
+    with conn.cursor() as cur:
+        cur.execute(sql)
 
 if __name__ == "__main__":
+
     prefectures = "fukuoka"
     from_date = dt.today()
     to_date = dt.today() + relativedelta(months=3)
