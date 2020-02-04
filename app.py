@@ -117,7 +117,7 @@ def handle_follow(event):
 def handle_unfollow(event):
     scrayper.delete_user_profile(event.source.user_id)
 
-
+# TODO shold be logging!!!!
 @app.route('/cron', methods=['POST'])
 def cron_handler():
     if request.headers['Content-Type'] != 'application/json':
