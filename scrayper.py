@@ -67,7 +67,8 @@ def get_connpass(prefectures, page, from_date, to_date):
             # replace ' to '' for postgresql.
             event['event_name'] = events_name[i].text.replace("\'", "\'\'")
             event['event_url'] = events_name[i]['href']
-            event['event_date'] = events_year[i].text  + '/' + events_date[i].text
+            event['event_date'] = events_year[i].text + \
+                '/' + events_date[i].text
             event['img_url'] = events_img[i]['src']
             event['domain'] = 'connpass'
             events.append(event)
@@ -75,8 +76,10 @@ def get_connpass(prefectures, page, from_date, to_date):
         previours_results = events_name
     return events
 
-#Dict
-def fetch_events(from_date,to_date,prefectures):
+# Dict
+
+
+def fetch_events(from_date, to_date, prefectures):
     f_date_str = from_date.strftime("%Y/%m/%d")
     t_date_str = to_date.strftime("%Y/%m/%d")
     sql = f'''
@@ -89,11 +92,13 @@ def fetch_events(from_date,to_date,prefectures):
     with conn.cursor(cursor_factory=DictCursor) as cur:
         cur.execute(sql)
         events_dict = cur.fetchall()
-    #events_dict is type:List
+    # events_dict is type:List
     return events_dict
+
 
 def download_connpass():
     get_connpass = list()
+
 
 def select_all_id():
     sql = f'SELECT DISTINCT user_id FROM users'
@@ -104,18 +109,18 @@ def select_all_id():
     return all_id
 
 
-def insert_user_profile(userid,display_name):
+def insert_user_profile(userid, display_name):
     sql = f"INSERT INTO users VALUES('{userid}','{display_name}')"
     conn = connecter()
     with conn.cursor() as cur:
         cur.execute(sql)
+
 
 def delete_user_profile(userid):
     sql = f"DELETE FROM users WHERE user_id = '{userid}'"
     conn = connecter()
     with conn.cursor() as cur:
         cur.execute(sql)
-
 
 
 if __name__ == "__main__":
@@ -126,7 +131,7 @@ if __name__ == "__main__":
 
     scrayped_events = get_connpass(prefectures, 1000, from_date, to_date)
     # print(scrayped_events)
-    fetched_events = fetch_events(from_date,to_date,prefectures)
+    fetched_events = fetch_events(from_date, to_date, prefectures)
     # print(fetched_events)
     previours_event = set()
     current_event = set()
@@ -134,13 +139,14 @@ if __name__ == "__main__":
         current_event.add(event['event_name'])
     for event in fetched_events:
         previours_event.add(event[0])
-    new_event_names = current_event-previours_event
-    #Log
+    new_event_names = current_event - previours_event
+    new_event = []
+    # Log
     print(f"Fould new events:{new_event_names}")
 
     for new_event_name in new_event_names:
         for event in scrayped_events:
-            if event['event_name']==new_event_name:
+            if event['event_name'] == new_event_name:
                 new_events.append(event)
 
     if len(new_events) > 0:
