@@ -110,7 +110,7 @@ def fetch_thisweek_events():
     sql = f"""
     SELECT event_name,img_url,event_url,event_date
     FROM events
-    WHERE event_date BETWEEN current_date AND {to_date_str}
+    WHERE event_date BETWEEN current_date AND '{to_date_str}'
     ORDER BY event_date DESC
     LIMIT 50
     """
@@ -119,7 +119,7 @@ def fetch_thisweek_events():
         cur.execute(sql)
         events_dict = cur.fetchall()
     return events_dict
-    
+
 def fetch_recentlly_events(prefectures):
     conn = connecter()
     delta = timedelta(days=4)
