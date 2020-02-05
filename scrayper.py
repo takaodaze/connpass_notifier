@@ -102,6 +102,24 @@ def fetch_events(from_date, to_date, prefectures):
     # events_dict is type:List
     return events_dict
 
+def fetch_thisweek_events():
+    conn = connecter()
+    delta = timedelta(days=7)
+    to_date_str = (dt.today()+delta).isoformat()
+
+    sql = f"""
+    SELECT event_name,img_url,event_url,event_date
+    FROM events
+    WHERE event_date BETWEEN current_date AND {to_date_str}
+    ORDER BY event_date DESC
+    LIMIT 50
+    """
+
+    with conn.cursor(cursor_factory=DictCursor) as cur:
+        cur.execute(sql)
+        events_dict = cur.fetchall()
+    return events_dict
+    
 def fetch_recentlly_events(prefectures):
     conn = connecter()
     delta = timedelta(days=4)
