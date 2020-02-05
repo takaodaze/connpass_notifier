@@ -115,7 +115,7 @@ class Flex:
     '''
     bubble_json_temp = '''{
       "type": "bubble",
-      "size": "kilo",
+      "size": "micro",
       "header": {
         "type": "box",
         "layout": "baseline",
