@@ -133,9 +133,9 @@ def cron_handler():
 
     message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     scrayper.insertEvents(request.json, 'fukuoka')
-    for message in message_list:
-        line_bot_api.broadcast(message)
-        print("did broadcast")
+    # for message in message_list:
+    #     line_bot_api.broadcast(message)
+    #     print("did broadcast")
 
     return jsonify(res='ok')
 
