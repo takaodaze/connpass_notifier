@@ -70,7 +70,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, flex_message)
     elif event.message.text == "今週のイベントを教えて":
         events =  scrayper.fetch_thisweek_events()
-        flex_messages = lineApiTools.gen_events_flex_carousel_list(events=events)
+        flex_message = lineApiTools.gen_events_flex_carousel_list(events=events)
         line_bot_api.reply_message(event.reply_token, flex_message)
     else:
         line_bot_api.reply_message(event.reply_token, flex_message)
