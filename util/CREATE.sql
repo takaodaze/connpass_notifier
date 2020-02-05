@@ -11,3 +11,11 @@ CREATE TABLE users(
 	user_id VARCHAR(255),
 	display_name VARCHAR(30)
 );
+
+
+SELECT event_name,event_date,insert_date
+        FROM events
+        WHERE insert_date BETWEEN '2020-02-01' AND '2020-02-05'
+        AND event_date >= '2020-02-05'
+        ORDER BY event_date ASC
+        LIMIT 50
