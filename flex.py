@@ -148,7 +148,7 @@ class Flex:
             "text": "*event_name",
             "wrap": true,
             "weight": "regular",
-            "size": "lg",
+            "size": "md",
             "maxLines": 3,
             "color": "#FFFFFF"
           }
