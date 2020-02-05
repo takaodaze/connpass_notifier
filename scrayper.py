@@ -52,7 +52,7 @@ def insertEvents(events, prefectures):
             '{event["event_url"]}',
             '{event["img_url"]}',
             '{prefectures}',
-            '{now_date_str}')
+            current_date)
         '''
         )
     query(conn, sql)
@@ -110,8 +110,8 @@ def fetch_recentlly_events(prefectures):
     sql = f"""
         SELECT event_name,img_url,event_url,event_date
         FROM events
-        WHERE insert_date BETWEEN '{from_date_str}' AND '{to_date_str}'
-        AND event_date >= '{to_date_str}'
+        WHERE insert_date BETWEEN '{from_date_str}' AND current_date
+        AND event_date >= current_date
         ORDER BY event_date ASC
         LIMIT 50
     """
