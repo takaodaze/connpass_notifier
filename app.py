@@ -73,6 +73,7 @@ def handle_message(event):
         flex_message = lineApiTools.gen_events_flex_carousel_list(events=events)
         line_bot_api.reply_message(event.reply_token, flex_message)
     else:
+        flex_message = flex.gen_start_flex()
         line_bot_api.reply_message(event.reply_token, flex_message)
         
         

@@ -131,7 +131,7 @@ def fetch_recentlly_events(prefectures):
         WHERE insert_date BETWEEN '{from_date_str}' AND current_date
         AND event_date >= current_date
         AND insert_date IS NOT NULL
-        ORDER BY insert_date ASC
+        ORDER BY insert_date 
         LIMIT 50
     """
     with conn.cursor(cursor_factory=DictCursor) as cur:
