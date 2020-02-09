@@ -75,7 +75,7 @@ def get_connpass(prefectures, page, from_date, to_date):
         for i in range(len(events_name)):
             event = {}
             # replace ' to '' for postgresql.
-            event['event_name'] = events_name[i].text.replace("\'", "\'\'")
+            event['event_name'] = events_name[i].text
             event['event_url'] = events_name[i]['href']
             event['event_date'] = events_year[i].text + \
                 '/' + events_date[i].text
@@ -197,6 +197,7 @@ if __name__ == "__main__":
     for new_event_name in new_event_names:
         for event in scrayped_events:
             if event['event_name'] == new_event_name:
+                event['event_name'] = event['event_name'].replace("\'", "\'\'")
                 new_events.append(event)
 
     if len(new_events) > 0:
