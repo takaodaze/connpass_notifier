@@ -67,6 +67,9 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, message)
     elif event.message.text == "新着のイベントを教えて":
         flex_message = lineApiTools.gen_recentlly_event_flex_list('fukuoka')
+        if len(flex_message)==0:
+           line_bot_api.reply_message(
+               event.reply_token, TextSendMessage("福岡の新着イベントは\n1件も見つからなかったよ...\nごめんね..."))
         line_bot_api.reply_message(event.reply_token, flex_message)
     elif event.message.text == "今週のイベントを教えて":
         events =  scrayper.fetch_thisweek_events()
