@@ -6,3 +6,4 @@ sqltools*
 __pycache__
 work*
 *.json
+api.http
