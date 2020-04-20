@@ -131,7 +131,7 @@ def cron_handler():
 
     message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     db_helper.insertEvents(request.json, 'fukuoka')
-    broadcast(message_list)
+    # broadcast(message_list)
 
     return jsonify(res='ok')
 
