@@ -119,8 +119,8 @@ def handle_unfollow(event):
     db_helper.delete_user_profile(event.source.user_id)
 
 # TODO shold be logging!!!!
-@app.route('/cron', methods=['POST'])
-def cron_handler():
+@app.route('/cron/<string:prefecture>', methods=['POST'])
+def cron_handler(prefecture):
     if request.headers['Content-Type'] != 'application/json':
         print(request.headers['Content-Type'])
         return flask.jsonify(res='error'), 400
@@ -130,7 +130,7 @@ def cron_handler():
             event['event_date'].replace('/', '-'))
 
     # message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
-    db_helper.insertEvents(request.json, 'fukuoka')
+    db_helper.insertEvents(request.json,prefecture) 
     # broadcast(message_list)
 
     return jsonify(res='ok')
