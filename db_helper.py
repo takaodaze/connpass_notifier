@@ -1,14 +1,15 @@
 import psycopg2
+import os
 from psycopg2.extras import DictCursor
 from datetime import date as dt
 from datetime import timedelta
 
 def connecter():
-    conn = psycopg2.connect('''
-    dbname=dopdifgtl4n9t
-    host=ec2-54-235-66-1.compute-1.amazonaws.com
-    user=yfneaarqpbzsuq
-    password=4580d3a0e77f82e7bb199f8698e407eec8409c9f183bf094eccc1c755cf974e4
+    conn = psycopg2.connect(f'''
+    dbname={os.environ['db_name']}
+    host={os.environ['db_host']}
+    user={os.environ['db_user']}
+    password={os.environ['db_passward']}
     ''')
     conn.autocommit = True
     return conn
