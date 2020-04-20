@@ -1,3 +1,5 @@
 .vscode
 .python-version
 .DS_store
+__pycache__
+work.py
