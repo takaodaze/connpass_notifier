@@ -129,7 +129,7 @@ def cron_handler():
         event['event_date'] = datetime.date.fromisoformat(
             event['event_date'].replace('/', '-'))
 
-    message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
+    # message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
     db_helper.insertEvents(request.json, 'fukuoka')
     # broadcast(message_list)
 
