@@ -1,3 +1,4 @@
+import os
 from flask import *
 import requests
 import datetime
@@ -19,12 +20,8 @@ from flex import Flex
 import flask
 
 
-# CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
-# TODO
-CHANNEL_ACCESS_TOKEN = "aum5WMRALWyRx7EeFGQpqMIAKMRDxqtuyiQ6o5shAw1TsD6DDFElPxq4eJSoEAFvCWYLpZFljQNsojWI11hflZRGI1E54paRgrXp4om20XptO6151PKORWRjRWaAlurG/gQS6o6UA9mGRNqm3Pm9NwdB04t89/1O/w1cDnyilFU="
-# CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
-# TODO
-CHANNEL_SECRET = "2b5ca5fb70f2a66347a0e059a7e05acf"
+CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
+CHANNEL_SECRET=os.environ['LINE_CHANNEL_SECRET']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 app = Flask(__name__)
