@@ -31,6 +31,7 @@ def scraype_and_insert_newevent_db(prefectures):
         for event in scrayped_events:
             if event['event_name'] == new_event_name:
                 event['event_name'] = event['event_name'].replace("\'", "\'\'")
+                event['event_name'] = event['event_name'].replace("\"", "”")
                 new_events.append(event)
 
     if len(new_events) > 0:
