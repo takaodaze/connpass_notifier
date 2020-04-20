@@ -35,7 +35,7 @@ def scraype_and_insert_newevent_db(prefectures):
 
     if len(new_events) > 0:
         # TODO
-        url = "https://conpass-notifier.herokuapp.com/cron"
+        url = "https://connpass-notifier.herokuapp.com/cron"
         method = "POST"
         headers = {"Content-Type": "application/json"}
         # PythonオブジェクトをJSONに変換する
