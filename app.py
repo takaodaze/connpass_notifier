@@ -78,6 +78,8 @@ def handle_message(event):
         start_message = flex.gen_start_flex()
         line_bot_api.reply_message(event.reply_token, start_message)
         
+
+@handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
     cookie = event.postback.data.split(':')
