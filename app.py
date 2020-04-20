@@ -5,6 +5,7 @@ import pprint
 import psycopg2
 from bs4 import BeautifulStoneSoup
 import scrayper
+import db_helper
 import lineApiTools
 from linebot import (
     LineBotApi, WebhookHandler
@@ -15,6 +16,7 @@ from linebot.exceptions import (
 from linebot.models import *
 import time
 from flex import Flex
+import flask
 
 
 # CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
@@ -72,23 +74,13 @@ def handle_message(event):
                event.reply_token, TextSendMessage("福岡の新着イベントは\n1件も見つからなかったよ...\nごめんね..."))
         line_bot_api.reply_message(event.reply_token, flex_message)
     elif event.message.text == "今週のイベントを教えて":
-        events =  scrayper.fetch_thisweek_events()
+        events = db_helper.fetch_thisweek_events()
         flex_message = lineApiTools.gen_events_flex_carousel_list(events=events)
         line_bot_api.reply_message(event.reply_token, flex_message)
     else:
         start_message = flex.gen_start_flex()
         line_bot_api.reply_message(event.reply_token, start_message)
         
-        
-    # if event.message.text == "テスト":
-    #     from_date = datetime.date.today()
-    #     events = scrayper.fetch_events(from_date,from_date,'fukuoka')
-    #     messages = lineApiTools.gen_events_flex_carousel_list(events)
-    #     for message in messages:
-    #         line_bot_api.broadcast(message)
-
-
-@handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
     cookie = event.postback.data.split(':')
@@ -101,7 +93,7 @@ def handle_postback(event):
         from_date = datetime.date.fromisoformat(cookie[1])
         to_date = datetime.date.fromisoformat(event.postback.params['date'])
 
-        events = scrayper.fetch_events(from_date, to_date, 'fukuoka')
+        events = db_helper.fetch_events(from_date, to_date, 'fukuoka')
         carousel = lineApiTools.gen_events_flex_carousel_list(events)
         
         if 0 < len(carousel) <= 5:  
@@ -111,21 +103,19 @@ def handle_postback(event):
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage("1件も見つからなかった...\nごめんね..."))
 
-
 @handler.add(FollowEvent)
 def handle_follow(event):
     userID = event.source.user_id
 
     display_name = line_bot_api.get_profile(userID).display_name
 
-    scrayper.insert_user_profile(userID, display_name)
+    db_helper.insert_user_profile(userID, display_name)
     flex_message = flex.gen_start_flex()
     line_bot_api.reply_message(event.reply_token, flex_message)
 
-
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-    scrayper.delete_user_profile(event.source.user_id)
+    db_helper.delete_user_profile(event.source.user_id)
 
 # TODO shold be logging!!!!
 @app.route('/cron', methods=['POST'])
@@ -139,12 +129,15 @@ def cron_handler():
             event['event_date'].replace('/', '-'))
 
     message_list = lineApiTools.gen_events_flex_carousel_list(request.json)
-    scrayper.insertEvents(request.json, 'fukuoka')
-    # for message in message_list:
-    #     line_bot_api.broadcast(message)
-    #     print("did broadcast")
+    db_helper.insertEvents(request.json, 'fukuoka')
+    broadcast(message_list)
 
     return jsonify(res='ok')
+
+def broadcast(message_list):
+    for message in message_list:
+        line_bot_api.broadcast(message)
+        print("did broadcast")
 
 
 if __name__ == "__main__":
