@@ -6,7 +6,8 @@ from scrayper import fetch_events
 import json
 import urllib
 
-def scraype_and_insert_newevent_db(prefectures):
+if __name__ =='__main__':
+    prefectures = "fukuoka"
     from_date = dt.today()
     to_date = dt.today() + relativedelta(months=2)
     print(f"search from {from_date} to {to_date}")
@@ -43,7 +44,3 @@ def scraype_and_insert_newevent_db(prefectures):
         request = urllib.request.Request(
             url, data=json_data, method=method, headers=headers)
         urllib.request.urlopen(request)
-
-if __name__ =='__main__':
-    scraype_and_insert_newevent_db("fukuoka")
-    scraype_and_insert_newevent_db("online")
