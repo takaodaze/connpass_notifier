@@ -49,7 +49,7 @@ def insertEvents(events, prefectures):
                    )
     query(conn, sql)
 
-def fetch_events(from_date, to_date, prefectures):
+def fetch_events(from_date, to_date):
     f_date_str = from_date.strftime("%Y/%m/%d")
     t_date_str = to_date.strftime("%Y/%m/%d")
     sql = f'''
@@ -83,7 +83,7 @@ def fetch_thisweek_events():
         events_dict = cur.fetchall()
     return events_dict
 
-def fetch_recentlly_events(prefectures):
+def fetch_recentlly_events():
     conn = connecter()
     delta = timedelta(days=4)
     to_date_str = dt.today().isoformat()
