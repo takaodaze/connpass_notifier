@@ -102,6 +102,8 @@ def gen_events_flex_carousel(part_of_events):
 
     carousel_temp += (bubbles[:-1] + "]}")
 
+    print("for debug message!!!")
+    print(carousel_temp)
     contents_data = json.loads(carousel_temp)
 
     carousel = FlexSendMessage(
