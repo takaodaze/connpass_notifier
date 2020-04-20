@@ -81,7 +81,9 @@ def handle_message(event):
 def handle_postback(event):
     user_id = event.source.user_id
     cookie = event.postback.data.split(':')
+    print(cookie)
     if cookie[0] == "from_date_message":
+        print(cookie[0],"from_da!!!!!")
         from_date = datetime.date.fromisoformat(event.postback.params['date'])
         message = flex.gen_to_datepicker(from_date)
         line_bot_api.reply_message(event.reply_token, message)
