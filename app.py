@@ -119,7 +119,7 @@ def handle_unfollow(event):
     db_helper.delete_user_profile(event.source.user_id)
 
 # TODO shold be logging!!!!
-@app.route('/cron/<string:prefecture>', methods=['POST'])
+@app.route('/cron/<prefecture>', methods=['POST'])
 def cron_handler(prefecture):
     if request.headers['Content-Type'] != 'application/json':
         print(request.headers['Content-Type'])
